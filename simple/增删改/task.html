@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <table>
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>JavaScript</td>
+                    <td>2021-01-01</td>
+                    <td>删除</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>JavaScript</td>
+                    <td>2021-01-01</td>
+                    <td>删除</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>JavaScript</td>
+                    <td>2021-01-01</td>
+                    <td>删除</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                books: [{
+                    id: 1,
+                    name: '三国演义',
+                    date: ''
+                },{
+                    id: 2,
+                    name: '水浒传',
+                    date: ''
+                },{
+                    id: 3,
+                    name: '红楼梦',
+                    date: ''
+                },{
+                    id: 4,
+                    name: '西游记',
+                    date: ''
+                }
+
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
