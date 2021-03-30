@@ -4,47 +4,91 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
-
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        a {
+            text-decoration: none;
+        }
+        .grid {
+            margin: 20px auto;
+            width: 500px;
+            text-align: center;
+        }
+        .book {
+            padding: 8px;
+            background-color: rgb(238, 209, 155);
+            border-bottom: 1px solid rgb(179, 179, 179);
+        }
+        .book button {
+            padding: 2px;
+            font-size: 12px;
+        }
+        .grid table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .grid th,td {
+            padding: 10;
+            border: 1px dashed rgb(233, 182, 87);
+            height: 35px;
+            line-height: 35px;
+        }
+        .grid th {
+            background-color: rgb(233, 182, 87);
+        }
     </style>
 </head>
 <body>
     <div id="app">
-        <table>
-            <thead>
-                <tr>
-                    <th>编号</th>
-                    <th>名称</th>
-                    <th>时间</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>JavaScript</td>
-                    <td>2021-01-01</td>
-                    <td>删除</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>JavaScript</td>
-                    <td>2021-01-01</td>
-                    <td>删除</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>JavaScript</td>
-                    <td>2021-01-01</td>
-                    <td>删除</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="grid">
+            <div class="book">
+                <form action="#">
+                    <label for="bookId">
+                        编号：
+                        <input id="bookId" v-model="bookId" type="text">
+                    </label>
+                    <label for="bookName">
+                        名称：
+                        <input id="bookName" v-model="bookName" type="text">
+                    </label>
+                    <button @click.prevent='handle'>提交</button>
+                </form>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr :key='book.id' v-for='book in books'>
+                        <td>{{book.id}}</td>
+                        <td>{{book.name}}</td>
+                        <!-- <td>2021-01-01</td> -->
+                        <td>{{book.date}}</td>
+                        <td>
+                            <a href="#" @click.prevent='edit'>修改</a>
+                            <span>|</span>
+                            <a href="#" @click.prevent>删除</a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
         let vm = new Vue({
             el: '#app',
             data: {
+                bookId: '',
+                bookName: '',
                 books: [{
                     id: 1,
                     name: '三国演义',
@@ -61,11 +105,47 @@
                     id: 4,
                     name: '西游记',
                     date: ''
+                }]
+            },
+            methods: {
+                handle: function() {
+                    // 添加图书
+                    let book = {
+                        id: this.bookId,
+                        name: this.bookName,
+                        date: ''
+                    }
+                    this.books.push(book);
+                    // if (!this.bookId) {
+                    //     this.bookId = this.books.length + 1;
+                    // }
+                    // console.log(this.bookId);
+                    // vm.$set(vm.books, this.bookId-1, book)
+                    // 清空表单
+                    this.bookId = '';
+                    this.bookName = '';
+                },
+                edit: function(e) {
+                    console.log(e.bookId);
                 }
-
-                ]
             }
         })
     </script>
+
+    <!-- 步骤 -->
+    <!-- 1 图书列表
+        实现静态列表效果
+        基于数据实现模板效果
+        处理每行的操作按钮 -->
+    <!-- 2 添加图书
+        实现表单的静态效果
+        添加图书表单域数据绑定
+        添加按钮事件绑定
+        实现添加业务逻辑 -->
+    <!-- 3 修改图书
+        修改信息填充到表单
+        修改后重新提交表单
+        重用添加和修改方法 -->
+
 </body>
 </html>
