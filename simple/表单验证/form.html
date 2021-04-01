@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            outline: 0;
+        }
+        
+
+        .reg-form {
+            width: 400px;
+            margin: 50px auto;
+        }
+        .uname-wrap {
+            height: 86px;
+        }
+        .reg-form .form-item {
+            height: 50px;
+            border: 1px solid;
+        }
+        .reg-form .form-item label {
+            display: block;
+            float: left;
+            width: 87px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            padding-left: 10px;
+        }
+        .reg-form .form-item input {
+            float: left;
+            padding: 0 20px;
+            width: 220px;
+            border: 0 none;
+            height: 50px;
+        }
+
+        .reg-form .tip {
+            padding-top: 5px;
+            font-size: 10px;
+        }
+
+        .reg-form  .form-item.error {
+            border: 1px solid red;
+        }
+        .reg-form .tip span.error {
+            color:red;
+        }
+        .reg-form .errIcon {
+            display: none;
+            margin-right: 5px;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            color: white;
+            background-color: red;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        .reg-form .error .errIcon {
+            display: inline-block;
+        }
+
+        .clearfix:after { 
+            content: "";
+            display: block;
+            height: 0;
+            visibility: hidden;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="reg-form">
+        <form action="#" id="register-form">
+            <div class="uname-wrap">
+                <div class="form-item" v-bind:class='arrClasses'>
+                    <label for="uname">
+                        用 户 名
+                    </label>
+                    <input type="text" id="uname" class="field" @change="checkname" v-model="uname">
+                </div>
+                <div class="tip">
+                    <span v-bind:class='arrClasses'><span class="errIcon">-</span>{{tips}}</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+
+        let vm = new Vue({
+            el: '#register-form',
+            data: {
+                uname: '',
+                tips: '请输入你的用户名',
+                arrClasses: {
+                    error: false,
+                    checked: false
+                }
+            },
+            methods: {
+                checkname: function() {
+                    if (this.uname.length < 4 || this.uname.length > 20) {
+                        this.arrClasses.error = true;
+                        this.tips = '长度只能在4-20个字符之间';
+                    } else {
+                        this.arrClasses.error = false;
+                        this.tips = '请输入你的用户名';
+                    }
+                }
+            }
+        })
+    </script> 
+</body>
+</html>
