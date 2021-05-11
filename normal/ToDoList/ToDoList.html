@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ToDoList</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style>
         * {
@@ -92,45 +92,25 @@
         <main>
             <div class="header">
                 <div class="add_task">
-                    <input type="text" class="task_input" placeholder="添加事件">
+                    <input type="text" class="task_input" placeholder="添加事件" v-model='content' @keyup.enter=addtask>
                 </div>
                 <div class="now">5月8日</div>
             </div>
             <div id="task_list">
                 <ul class="tsklist_underway">
-                    <li class="task_item">
-                        <input type="button" class="task_complete" value="">
-                        <span class="task_content">好好学习天天向上</span>
-                        <input type="button" class="tomato">
-                    </li>
-                    <li class="task_item">
-                        <input type="button" class="task_complete" value="">
-                        <span class="task_content">好好学习天天向上</span>
-                        <input type="button" class="tomato">
-                    </li>
-                    <li class="task_item">
-                        <input type="button" class="task_complete" value="">
-                        <span class="task_content">好好学习天天向上</span>
-                        <input type="button" class="tomato">
-                    </li>
-                    <li class="task_item">
-                        <input type="button" class="task_complete" value="">
-                        <span class="task_content">好好学习天天向上</span>
-                        <input type="button" class="tomato">
-                    </li>
-                    <li class="task_item">
-                        <input type="button" class="task_complete" value="">
-                        <span class="task_content">好好学习天天向上</span>
-                        <input type="button" class="tomato">
+                    <li :key='task.id' v-for='task in tasks' class="task_item">
+                        <input type="button" class="task_complete" @click=complete(task.id) value="">
+                        <span class="task_content">{{task.task}}</span>
+                        <input type="button" class="tomato" value="">
                     </li>
                 </ul>
-                <ul class="tsklist_completed">
+                <!-- <ul class="tsklist_completed">
                     <li class="task_item">
                         <input type="button" class="task_complete" value="">
                         <span class="task_content">=好好学习天天向上</span>
                         <input type="button" class="tomato">
                     </li>
-                </ul>
+                </ul> -->
             </div>
         </main>
     </div>
@@ -140,7 +120,45 @@
         let vue = new Vue({
             el: "#app",
             data: {
-                msg: 'test'
+                total: 0,
+                content: '',
+                tasks: []
+            },
+            methods: {
+                addtask: function() {
+                    let task = {
+                        id: this.total,
+                        task: this.content
+                    }
+                    this.tasks.push(task);
+                    this.total++;
+                    this.content = '';
+                },
+                complete: function(id) {
+                    this.tasks = this.tasks.filter(function(item) {
+                        return item.id != id;
+                    });
+                }
+            },
+            mounted: function() {
+                let data = [{
+                    id: 1,
+                    task: '好好学习，天天向上',
+                    time: 5
+                }, {
+                    id: 2,
+                    task: '英语单词',
+                    time: 25
+                }, {
+                    id: 3,
+                    task: '锻炼身体',
+                    time: 25
+                }, {
+                    id: 4,
+                    task: 'vue总复习',
+                    time: 120
+                }]
+                this.tasks = data;
             }
         })
     </script>
