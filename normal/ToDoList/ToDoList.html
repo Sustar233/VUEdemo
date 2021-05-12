@@ -126,6 +126,7 @@
             el: "#app",
             data: {
                 total: 0,
+                nextId: 0,
                 content: '',
                 tasks: []
             },
@@ -135,13 +136,16 @@
                     if (!this.content) {
                         return;
                     }
-
+                    // 创建新的任务对象
                     let task = {
-                        id: this.total,
+                        id: this.nextId,
                         task: this.content
                     }
+                    // 将新的任务对象假如任务组
                     this.tasks.push(task);
-                    this.total++;
+                    // 更新总数
+                    this.total = this.tasks.length;
+                    this.nextId = parseInt(this.tasks[this.tasks.length - 1].id) + 1;
                     this.content = '';
                     this.saveTasks();
                 },
@@ -149,6 +153,7 @@
                     console.log(id);
                     // !!!!!!!!!!!!!!!!!!!
                 },
+                // 任务完成（删除该任务
                 complete: function(id) {
                     this.tasks = this.tasks.filter(function(item) {
                         return item.id != id;
@@ -170,7 +175,12 @@
             mounted: function() {
                 if (localStorage.getItem('tasks')) {
                     try {
-                        this.tasks = JSON.parse(localStorage.getItem('tasks'));
+                        let tasks = JSON.parse(localStorage.getItem('tasks'))
+                        this.tasks = tasks;
+                        if (tasks.length != 0) {
+                            // 获取任务组最后一项的id并+1 得到未来新创建的任务id序列
+                            this.nextId = parseInt(tasks[tasks.length - 1].id) + 1;
+                        }
                     } catch(e) {
                         localStorage.removeItem('tasks');
                     }
