@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+}
+
+button {
+    border: 1px solid transparent;
+    outline: none;
+}
+
+/* 字体图标通用 */
+.icon {
+    width: 1em; height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+ }
+
+input {
+    border: 0;
+}
+
+li {
+    list-style: none;
+}
+
+#app {
+    margin: 20px auto;
+    width: 700px;
+    height: 700px;
+    border: 1.5px solid rgb(236, 223, 223);
+    border-radius: 10px;
+}
+
+/* .header */
+.header {
+    margin: 26px 25px 0;
+    height: 70px;
+}
+
+.add_task .task_input {
+    float: left;
+    padding: 8px 18px;
+    width: 360px;
+    height: 24px;
+    color: #a1a1a1;
+    background-color: #f7f7f7;
+    border: 1px solid #b8b8b8;
+    border-radius: 5px;
+}
+
+#app .header .now {
+    float: left;
+    margin-left: 60px;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #4b4d52;
+    background-color: #f7f7f7;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.header #moreSetting {
+    float: left;
+    margin-left: 50px;
+    height: 40px;
+    width: 40px;
+}
+
+#moreSetting .show_more {
+    width: 100%;
+    height: 100%;
+    color: rgb(0,141,142);
+    background-color: rgb(248,248,248);
+    font-size: 30px;
+}
+
+/* tasks list */
+#task_list {
+    margin-top: 10px;
+    width: 100%;
+    height: 600px;
+}
+
+#task_list .task_item {
+    position: relative;
+    padding: 14px 20px 15px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+
+#task_list .task_complete {
+    float: left;
+    margin-left: 5px;
+    width: 17px;
+    height: 17px;
+    color: white;
+    background-color: white;
+    border: 1px solid rgb(179, 172, 172);
+    border-radius: 50%;
+}
+
+#task_list .task_content {
+    float: left;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+#task_list .complete {
+    color: #b5b5b5;
+}
+
+#task_list .complete .task_complete {
+    background-color: #ec7260;
+}
+
+#task_list .complete .task_content {
+    text-decoration: line-through;
+}
+
+#task_list .delete {
+    visibility: hidden;
+    float: right;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgb(187, 187, 187);
+    color: rgb(184, 184, 184);
+    background-color: white;
+    cursor: pointer;
+}
+
+#task_list .task_item:hover .delete {
+    visibility: visible;
+}

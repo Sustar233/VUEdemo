@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDoList</title>
+    <title>ToDoListTest</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="http://at.alicdn.com/t/font_2547237_c9bi0btw9uj.js"></script>
     <link rel="stylesheet" href="index.css">
@@ -32,10 +32,8 @@
         <main>
             <button class="clearTask" @click=remove>清空已完成</button>
             <div class="header">
-                <div class="add_task">
-                    <input type="text" class="task_input" placeholder="添加事件" v-model='content' @keyup.enter=addtask v-focus>
-                </div>
-                <div class="now">{{now}}</div>
+                <add_task placeholder="输入任务" input-class="task_input" method-name="addtask"></add_task>
+                <now></now>
                 <div id="moreSetting">
                     <button class="show_more">
                         <svg class="icon" aria-hidden="true">
@@ -44,26 +42,119 @@
                     </button>
                 </div>
             </div>
-            <div id="task_list">
-                <ul class="tsklist_underway">
-                    <li :key='task.id' v-for='task in tasks' v-bind:class="{ complete: task.isComplete }" class="task_item">
-                        <input type="button" class="task_complete" @click=complete(task) value="√">
-                        <span class="task_content" @dblclick.prevent=edit(task.id)>{{task.task}}</span>
-                        <input type="button" class="tomato" value="">
-                    </li>
-                </ul>
-            </div>
+            <task_list :tasks="tasks" :comp="complete" :save="saveTasks"></task_list>
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
+        Vue.config.productionTip = false;
+
         Vue.directive('focus', {
             inserted: function(el) {
                 el.focus();
             }
         });
-        let vue = new Vue({
+        // 获取输入框内容并提交
+        // 提交后由本体进行等处理
+        Vue.component('add_task', {
+            template: `
+            <div class="add_task">
+                <input type="text" :methodname=methodName :class=inputClass :placeholder=placeholder v-model='content' @keyup.enter=subContent v-focus>
+            </div>
+            `,
+            data: function() {
+                return {
+                    content: ''
+                }
+            },
+            methods: {
+                subContent: function() {
+                    // 调用父元素对应方法并传入输入框内容
+                    this.$parent[this.methodName](this.content);
+                }
+            },
+            props: [
+                'placeholder',
+                'inputClass',
+                'methodName'
+            ]
+        })
+        
+
+        // 任务列表
+        Vue.component('task_list', {
+            // item从上到下依次 完成按钮，任务内容，番茄按钮，删除按钮
+            template: `
+            <div id="task_list">
+                <ul class="tsklist_underway">
+                    <li :key='task.id' v-for='task in tasks' :class="{ complete: task.isComplete }" class="task_item">
+                        <input type="button" class="task_complete" @click=taskComplete(task) value="√">
+                        <span class="task_content" @dblclick.prevent=edit(task.id)>{{task.task}}</span>
+                        <input type="button" class="tomato" value="">
+                        <delete-item :tasks="tasks" :thisItem="task" :save="save"></delete-item>
+                    </li>
+                </ul>
+            </div>
+            `,
+            data: function() {
+                return {
+                    taskComplete: function(task) {
+                        this.comp(task);
+                    },
+                    edit: function(id) {
+                        console.log(id);
+                    }
+                }
+            },
+            props: [
+                'tasks',
+                'comp',
+                'save'
+            ]
+        })
+
+        // 删除按钮（任务列表子组件
+        Vue.component('deleteItem', {
+            template: `
+            <input type="button" class="delete" value="×" @click="deleteThis($event)">
+            `,
+            props: [
+                'tasks',
+                'thisItem',
+                'save'
+            ],
+            methods: {
+                // 删除这个任务
+                deleteThis: function(e) {
+                    // 获取该任务序列
+                    let itemIndex = this.tasks.indexOf(this.thisItem);
+                    // 将该任务从任务组删除
+                    this.tasks.splice(itemIndex, 1);
+                    // 保存到浏览器
+                    if (this.save) {
+                        this.save();
+                    }
+                }
+            },
+        })
+
+        // 获取当前时间的组件
+        Vue.component('now', {
+            template: `
+                <div class="now">{{now}}</div>
+            `,
+            computed: {
+                // 获取当前日期
+                now: function() {
+                    let date = new Date();
+                    let now = date.getMonth() + 1 + '月' + date.getDate() + '日'
+                    return now
+                }
+            }
+        })
+
+        let vm = new Vue({
             el: "#app",
             data: {
                 total: 0,
@@ -72,11 +163,13 @@
                 tasks: []
             },
             methods: {
-                addtask: function() {
+                // 将add_task传过来的数据添加到tasks数组
+                addtask: function(content) {
                     // 确保输入了内容
-                    if (!this.content) {
+                    if (!content) {
                         return;
                     }
+                    this.content = content;
                     // 创建新的任务对象
                     let task = {
                         id: this.nextId,
@@ -113,19 +206,11 @@
                     });
                     this.saveTasks();
                 },
-                saveTasks() {
+                saveTasks: function() {
                     // 将任务组转换为JSON字符串并赋值给parsed
                     const parsed = JSON.stringify(this.tasks);
                     // 将parsed存储到tasks字段
                     localStorage.setItem('tasks', parsed);
-                }
-            },
-            computed: {
-                // 获取当前日期
-                now: function() {
-                    let date = new Date();
-                    let now = date.getMonth() + 1 + '月' + date.getDate() + '日'
-                    return now
                 }
             },
             mounted: function() {
