@@ -32,7 +32,7 @@
         <main>
             <button class="clearTask" @click=remove>清空已完成</button>
             <div class="header">
-                <add_task placeholder="输入任务" input-class="task_input" method-name="addtask"></add_task>
+                <add_task placeholder="输入任务" method-name="addtask"></add_task>
                 <now></now>
                 <div id="moreSetting">
                     <button class="show_more">
@@ -60,7 +60,7 @@
         Vue.component('add_task', {
             template: `
             <div class="add_task">
-                <input type="text" :methodname=methodName :class=inputClass :placeholder=placeholder v-model='content' @keyup.enter=subContent v-focus>
+                <input type="text" :methodname=methodName class="task_input" :placeholder=placeholder v-model='content' @keyup.enter=subContent v-focus>
             </div>
             `,
             data: function() {
@@ -72,11 +72,12 @@
                 subContent: function() {
                     // 调用父元素对应方法并传入输入框内容
                     this.$parent[this.methodName](this.content);
+                    // 清空输入框内容
+                    this.content = '';
                 }
             },
             props: [
                 'placeholder',
-                'inputClass',
                 'methodName'
             ]
         })
@@ -89,8 +90,9 @@
             <div id="task_list">
                 <ul class="tsklist_underway">
                     <li :key='task.id' v-for='task in tasks' :class="{ complete: task.isComplete }" class="task_item">
-                        <input type="button" class="task_complete" @click=taskComplete(task) value="√">
-                        <span class="task_content" @dblclick.prevent=edit(task.id)>{{task.task}}</span>
+                        <input type="button" class="task_complete" @click="taskComplete(task)" value="√">
+                        <span class="task_content" v-if="edited" @dblclick.prevent=edit(task.id)>{{task.task}}</span>
+                        <span class="task_content" v-else @dblclick.prevent=edit(task.id)>{{task.task}}</span>
                         <input type="button" class="tomato" value="">
                         <delete-item :tasks="tasks" :thisItem="task" :save="save"></delete-item>
                     </li>
@@ -99,19 +101,25 @@
             `,
             data: function() {
                 return {
-                    taskComplete: function(task) {
-                        this.comp(task);
-                    },
-                    edit: function(id) {
-                        console.log(id);
-                    }
+                    edited: false
                 }
             },
             props: [
                 'tasks',
                 'comp',
                 'save'
-            ]
+            ],
+            methods:{
+                taskComplete: function(task) {
+                    this.comp(task);
+                },
+                edit: function(id) {
+                    this.edited = true;
+                    console.log(this.edited);
+                    console.log(id);
+                }
+                
+            }
         })
 
         // 删除按钮（任务列表子组件
@@ -182,14 +190,14 @@
                     this.total = this.tasks.length;
                     // 更新下一个ID应设的值
                     this.nextId = parseInt(this.tasks[this.tasks.length - 1].id) + 1;
-                    // 清空表单元素
-                    this.content = '';
                     // 保存
                     this.saveTasks();
                 },
                 edit: function(id) {
-                    console.log(id);
-                    // !!!!!!!!!!!!!!!!!!!
+                    //!!!!!!!!!!!!!!!!!!!!
+                    // console.log(id);
+                    // console.log('qwq');
+                    
                 },
                 // 任务完成（删除该任务
                 complete: function(task) {
